@@ -1,124 +1,155 @@
-# CommandCore Launcher - Modern Edition
+# CommandCore Launcher - Professional Security Suite
 
 <div align="center">
 
-![CommandCore Logo](assets/logo.png)
+![CommandCore Logo](CommandCore.png)
 
-**A modern, feature-rich launcher for the CommandCore application suite**
+**A comprehensive, professional launcher and management suite for the complete CommandCore cybersecurity ecosystem**
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/outback-electronics/commandcore-launcher)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Outback-Electronics/Outback-CommandCore)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![Qt](https://img.shields.io/badge/Qt-PySide6-red.svg)](https://pyside.org)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
+
+*Developed by [Outback Electronics](https://outbackelectronics.com.au)*
 
 </div>
 
 ## 🚀 Overview
 
-CommandCore Launcher is a completely modernized, centralized management hub for the entire CommandCore application ecosystem. Built with cutting-edge technologies and modern design principles, it provides an intuitive interface for launching, monitoring, and managing all CommandCore applications.
+CommandCore Launcher is the centralized command and control hub for the complete CommandCore cybersecurity ecosystem. This professional-grade management suite provides unified access to 11 specialized security, forensic, and intelligence tools designed for cybersecurity professionals, penetration testers, forensic analysts, and system administrators.
+
+Built with cutting-edge technologies and modern design principles, CommandCore Launcher offers an intuitive interface for launching, monitoring, and managing the entire suite of professional security applications.
+
+## 🛡️ CommandCore Security Ecosystem
+
+CommandCore manages these 11 professional security and forensic applications:
+
+### 📱 Mobile Security Platforms
+| Application | Purpose | Key Features |
+|-------------|---------|--------------|
+| **ARES-i** | iOS Security Assessment Platform | • Comprehensive iOS penetration testing<br>• Jailbreak detection and vulnerability assessment<br>• Professional security reporting and threat intelligence |
+| **DROIDCOM** | Android Diagnostic & Control | • Comprehensive Android diagnostic and penetration testing<br>• Root management and security scanning<br>• Remote control and system monitoring |
+
+### 🔒 Security & Penetration Testing
+| Application | Purpose | Key Features |
+|-------------|---------|--------------|
+| **HackAttack** | Penetration Testing Framework | • Tactical offensive security testing<br>• Multi-vector testing and real-time exploitation<br>• Custom automation and evasion techniques |
+| **NIGHTFIRE** | Active Defense System | • Real-time threat monitoring and detection<br>• Automated incident response<br>• Integrated threat intelligence feeds |
+
+### 🔍 Intelligence & Analysis
+| Application | Purpose | Key Features |
+|-------------|---------|--------------|
+| **ECHOZERO** | OSINT Platform | • Complete SpiderFoot OSINT functionality<br>• Domain analysis, email harvesting, technology detection<br>• Social media and breach data checking |
+| **VANTAGE** | Analytics & Intelligence | • System performance and security analytics<br>• Unified dashboard for device telemetry<br>• Custom reporting and real-time monitoring |
+
+### 💾 Forensic & Data Management
+| Application | Purpose | Key Features |
+|-------------|---------|--------------|
+| **BLACKSTORM** | Forensic & Secure Wipe Utility | • Military-grade data destruction with multiple algorithms<br>• Forensic disk cloning and hidden partition detection<br>• Bulk operations for enterprise environments |
+
+### ⚙️ System & Automation Tools
+| Application | Purpose | Key Features |
+|-------------|---------|--------------|
+| **PC-X** | System Management | • Cross-platform tactical systems toolkit<br>• Advanced diagnostics and system manipulation<br>• Multi-OS penetration testing (Windows, Linux, macOS) |
+| **OMNISCRIBE** | Automation Suite | • Scripting and task automation<br>• Workflow creation across CommandCore tools<br>• Code repository and secure execution environment |
+| **Codex** | AI Code Generator | • AI-powered code generation and assistance<br>• Security script development<br>• Automated payload creation |
+| **CommandCore** | Central Launcher | • Centralized hub for the entire ecosystem<br>• Modern interface for tool management<br>• System monitoring and application oversight |
 
 ## ✨ Key Features
 
-### 🎨 Modern User Interface
-- **Beautiful Dark Theme** with customizable colors and fonts
-- **Smooth Animations** and transitions throughout the interface
-- **Responsive Design** that adapts to different screen sizes
-- **Live Theme Preview** with real-time customization
-- **System Tray Integration** for background operation
+### 🎨 Professional User Interface
+- **Modern Dark & Light Themes** with customizable colors and fonts
+- **Responsive Design** that adapts to different screen sizes and resolutions
+- **Professional Dashboard** with comprehensive system overview
+- **Real-time Status Indicators** for all managed applications
+- **System Tray Integration** for discrete background operation
+- **Animated Splash Screen** with professional branding
 
 ### 📊 Advanced System Monitoring
 - **Real-time Performance Charts** for CPU, memory, disk, and network
-- **Process Management** with detailed resource tracking
-- **System Information** display with hardware details
-- **Performance Analytics** with historical data
-- **Customizable Monitoring Intervals**
+- **Process Management** with detailed resource tracking for security tools
+- **System Information** display with comprehensive hardware details
+- **Performance Analytics** with historical data and trend analysis
+- **Security Application Health Monitoring**
+- **Resource Usage Alerts** and threshold management
 
-### 🔧 Comprehensive Application Management
-- **Visual Application Cards** with status indicators
-- **Advanced Process Monitoring** with resource usage
+### 🔧 Professional Application Management
+- **Visual Application Cards** with real-time status and resource usage
+- **Advanced Process Monitoring** for all security tools
 - **Bulk Operations** (start all, stop all applications)
-- **Auto-restart Capabilities** for critical applications
-- **Dependency Management** and startup ordering
+- **Auto-restart Capabilities** for critical security services
+- **Dependency Management** and startup sequencing
+- **Application Validation** and integrity checks
+- **Service Discovery** and health monitoring
 
-### ⚙️ Intelligent Configuration
+### ⚙️ Enterprise Configuration System
 - **Type-safe Configuration** using modern Python dataclasses
-- **Live Settings Preview** with instant feedback
-- **Configuration Validation** with helpful error messages
-- **Import/Export Settings** for easy backup and sharing
+- **Profile Management** for different operational environments
+- **Configuration Validation** with security-focused checks
+- **Import/Export Configurations** for deployment across teams
 - **Environment Variable Override** support
+- **Centralized Settings Management** across all tools
 
-### 🔔 Modern Notification System
-- **Beautiful Notifications** with custom styling
-- **Multiple Notification Types** (info, success, warning, error)
-- **Configurable Positioning** and duration
-- **Action Buttons** for interactive notifications
-- **Notification History** and management
+### 🔔 Professional Notification System
+- **Security Alert Notifications** with priority levels
+- **System Status Updates** with detailed information
+- **Application Event Notifications** for critical operations
+- **Configurable Alert Thresholds** and escalation
+- **Audit Trail Notifications** for compliance tracking
 
-### 📈 State Management & Persistence
-- **Centralized State Management** with automatic persistence
-- **Hierarchical State Organization** with scoped storage
-- **State Validation** and type checking
-- **Change History** with undo functionality
-- **Temporary State** with automatic expiration
+### 📈 Advanced State Management
+- **Centralized State Management** across all security tools
+- **Session Persistence** for operational continuity
+- **State Validation** and integrity checking
+- **Audit Logging** of all state changes
+- **Cross-session Recovery** for interrupted operations
 
-### 🔍 Advanced Logging & Debugging
-- **Structured JSON Logging** for better analysis
-- **Colored Console Output** for development
-- **File Rotation** with size and count limits
-- **Performance Tracking** with timing metrics
-- **Error Context** and stack trace capture
+### 🔍 Comprehensive Logging & Audit
+- **Structured Security Logging** for compliance and analysis
+- **Audit Trail Management** with tamper detection
+- **Performance Tracking** with detailed metrics
+- **Error Context** and comprehensive debugging
+- **Log Level Management** with role-based access
+- **Forensic Log Preservation** with chain of custody
 
 ## 🏗️ Architecture
 
-### Modern Design Patterns
-- **MVP Architecture** with clear separation of concerns
-- **Signal-Slot Communication** for loose coupling
-- **Dependency Injection** for testability
-- **Observer Pattern** for state changes
-- **Strategy Pattern** for configurable behavior
+### Professional Design Patterns
+- **MVP Architecture** with clear separation of security concerns
+- **Signal-Slot Communication** for secure inter-component messaging
+- **Dependency Injection** for testability and modularity
+- **Observer Pattern** for real-time monitoring and alerting
+- **Strategy Pattern** for configurable security policies
 
-### Core Components
-
-```
-CommandCore/
-├── CommandCore.png         # Application icon
-├── README.md               # This file
-├── __init__.py             # Package initialization
-├── app_state.py            # Application state management
-├── application_manager_tab.py  # Application management UI
-├── commandcore-launcher.desktop  # Linux desktop entry
-├── config.py               # Configuration management
-├── dashboard_tab.py        # Dashboard UI
-├── logging_setup.py        # Logging configuration
-├── main.py                 # Application entry point
-├── notification_manager.py # Notification system
-├── requirements.txt        # Python dependencies
-├── settings_tab.py         # Settings UI
-├── setup.py                # Installation script
-├── splash_screen.py        # Splash screen implementation
-├── system_status_tab.py    # System monitoring UI
-└── theme_manager.py        # Theme management
-```
+### Security-First Design
+- **Principle of Least Privilege** in application management
+- **Secure Communication** between launcher and managed applications
+- **Input Validation** and sanitization throughout
+- **Error Handling** without information disclosure
+- **Audit Logging** of all critical operations
 
 ## 🚀 Installation
 
 ### Prerequisites
-- **Python 3.8+** (3.10+ recommended)
+- **Python 3.8+** (3.10+ recommended for optimal performance)
 - **Qt6** libraries (installed via PySide6)
-- **Git** (for version detection)
+- **Git** (for version control and updates)
+- **8GB+ RAM** (16GB+ recommended for running multiple security tools)
+- **Administrator/Root privileges** (required for some security tools)
 
-### Quick Start
+### Professional Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/outback-electronics/commandcore-launcher.git
-   cd commandcore-launcher
+   git clone https://github.com/Outback-Electronics/Outback-CommandCore.git
+   cd Outback-CommandCore
    ```
 
-2. **Create virtual environment:**
+2. **Create isolated environment:**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv commandcore_env
+   source commandcore_env/bin/activate  # On Windows: commandcore_env\Scripts\activate
    ```
 
 3. **Install dependencies:**
@@ -126,259 +157,227 @@ CommandCore/
    pip install -r requirements.txt
    ```
 
-4. **Run the application:**
+4. **Initial configuration:**
+   ```bash
+   python main.py --setup
+   ```
+
+5. **Launch CommandCore:**
    ```bash
    python main.py
    ```
 
-### Development Installation
+### Enterprise Deployment
 
-For development with additional tools:
+For enterprise environments with multiple users:
 ```bash
-pip install -r requirements.txt
-pip install pytest pytest-qt black flake8 mypy
+# Install system-wide dependencies
+sudo pip install -r requirements.txt
+
+# Create shared configuration directory
+sudo mkdir -p /opt/commandcore/config
+sudo chown -R commandcore:commandcore /opt/commandcore
+
+# Deploy with enterprise configuration
+python setup.py install --enterprise
 ```
 
-## 🎯 Usage
+## 🎯 Professional Usage
 
-### First Launch
-1. The application will show a **modern splash screen** with loading animation
-2. **Dashboard** opens by default with system overview
-3. Navigate between tabs using the **tab bar** at the top
-4. **System tray icon** allows quick access when minimized
+### Initial Setup
+1. **Professional Splash Screen** displays during initialization
+2. **Security Dashboard** opens with comprehensive system overview
+3. **Application Discovery** automatically detects installed CommandCore tools
+4. **Security Baseline** establishes system performance metrics
 
-### Managing Applications
-- **Application Manager** tab shows all CommandCore applications
-- **Click cards** to view detailed information
-- **Start/Stop** applications with visual feedback
-- **Monitor resource usage** in real-time
-- **Configure auto-restart** and other advanced options
+### Security Tool Management
+- **Application Manager** provides centralized control over all 11 tools
+- **Real-time Monitoring** of tool status, resource usage, and performance
+- **Integrated Launch Control** with dependency management
+- **Service Health Monitoring** with automatic restart capabilities
+- **Resource Allocation** management for optimal performance
 
-### Customizing Appearance
-- Go to **Settings > Appearance** tab
-- **Choose themes** from the dropdown
-- **Customize colors** with the color picker
-- **Adjust fonts** and animation settings
-- **Live preview** shows changes instantly
+### Professional Workflows
+- **Security Assessment Campaigns** using coordinated tool deployment
+- **Forensic Analysis Workflows** with integrated data management
+- **Penetration Testing Operations** with comprehensive logging
+- **Intelligence Gathering** using OSINT and analytics platforms
+- **Incident Response** with automated tool orchestration
 
-### System Monitoring
-- **System Status** tab provides detailed monitoring
-- **Performance charts** update in real-time
-- **Process table** shows running applications
-- **Export data** for analysis (coming soon)
+### Enterprise Features
+- **Multi-user Profile Management** with role-based access
+- **Centralized Configuration** deployment across teams
+- **Audit Compliance** with comprehensive logging
+- **Performance Optimization** for enterprise hardware
+- **Integration APIs** for security orchestration platforms
 
 ## ⚙️ Configuration
 
-### Configuration File
-Settings are stored in a platform-appropriate location:
-- **Windows:** `%APPDATA%/CommandCore/config.json`
-- **macOS:** `~/Library/Application Support/CommandCore/config.json`
-- **Linux:** `~/.config/commandcore/config.json`
+### Configuration Hierarchy
+1. **System-wide Configuration:** `/etc/commandcore/config.json`
+2. **User Configuration:** `~/.config/commandcore/config.json`
+3. **Project Configuration:** `./config/local.json`
+4. **Environment Variables:** `COMMANDCORE_*`
 
-### Environment Variables
-Override settings using environment variables:
-```bash
-export COMMANDCORE_THEME=dark
-export COMMANDCORE_LOG_LEVEL=DEBUG
-export COMMANDCORE_DEBUG=true
-
-```
-
-## 📁 Directory Structure
-
-```
-CommandCore/
-├── CommandCore.png         # Application icon
-├── README.md               # This file
-├── __init__.py             # Package initialization
-├── app_state.py            # Application state management
-├── application_manager_tab.py  # Application management UI
-├── commandcore-launcher.desktop  # Linux desktop entry
-├── config.py               # Configuration management
-├── dashboard_tab.py        # Dashboard UI
-├── logging_setup.py        # Logging configuration
-├── main.py                 # Application entry point
-├── notification_manager.py # Notification system
-├── requirements.txt        # Python dependencies
-├── settings_tab.py         # Settings UI
-├── setup.py                # Installation script
-├── splash_screen.py        # Splash screen implementation
-├── system_status_tab.py    # System monitoring UI
-└── theme_manager.py        # Theme management
-```
-
-### Advanced Configuration
+### Professional Configuration Example
 ```json
 {
+  "security": {
+    "audit_logging": true,
+    "secure_communications": true,
+    "privilege_escalation_required": true,
+    "tool_isolation": true
+  },
+  "enterprise": {
+    "ldap_integration": false,
+    "sso_enabled": false,
+    "compliance_mode": "SOC2",
+    "data_retention_days": 365
+  },
+  "performance": {
+    "high_performance_mode": true,
+    "resource_limits": {
+      "max_cpu_percent": 80,
+      "max_memory_gb": 12
+    }
+  },
   "ui": {
-    "theme": "dark",
-    "font_family": "Segoe UI",
-    "font_size": 10,
-    "animation_enabled": true
-  },
-  "logging": {
-    "level": "INFO",
-    "file_enabled": true,
-    "max_file_size_mb": 10
-  },
-  "application": {
-    "auto_start_monitoring": false,
-    "update_check_frequency": "weekly"
+    "theme": "professional_dark",
+    "security_indicators": true,
+    "audit_trail_visible": true
   }
 }
 ```
 
-## 🔧 Development
-
-### Project Structure
-```
-CommandCore/
-├── CommandCore.png         # Application icon
-├── README.md               # This file
-├── __init__.py             # Package initialization
-├── app_state.py            # Application state management
-├── application_manager_tab.py  # Application management UI
-├── commandcore-launcher.desktop  # Linux desktop entry
-├── config.py               # Configuration management
-├── dashboard_tab.py        # Dashboard UI
-├── logging_setup.py        # Logging configuration
-├── main.py                 # Application entry point
-├── notification_manager.py # Notification system
-├── requirements.txt        # Python dependencies
-├── settings_tab.py         # Settings UI
-├── setup.py                # Installation script
-├── splash_screen.py        # Splash screen implementation
-├── system_status_tab.py    # System monitoring UI
-└── theme_manager.py        # Theme management
-```
-
-### Code Style
-- **Black** for code formatting
-- **Flake8** for linting
-- **MyPy** for type checking
-- **Docstrings** for all public functions
-- **Type hints** for better IDE support
-
-### Testing
+### Environment Variables for Production
 ```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=. --cov-report=html
-
-# Run specific test file
-pytest tests/test_config.py
+export COMMANDCORE_MODE=production
+export COMMANDCORE_LOG_LEVEL=INFO
+export COMMANDCORE_AUDIT_ENABLED=true
+export COMMANDCORE_SECURE_MODE=true
+export COMMANDCORE_DATA_DIR=/opt/commandcore/data
 ```
 
-### Building Executables
+## 🔧 Development & Customization
+
+### Professional Development Setup
 ```bash
-# Using PyInstaller (cross-platform)
-pyinstaller --windowed --onefile main.py
+# Clone repository
+git clone https://github.com/Outback-Electronics/Outback-CommandCore.git
 
-# Using cx_Freeze (Windows)
-python setup.py build
+# Install development dependencies
+pip install -r requirements-dev.txt
 
-# Using py2app (macOS)
-python setup.py py2app
+# Setup pre-commit hooks for security
+pre-commit install
+
+# Run security analysis
+bandit -r . -f json -o security-report.json
 ```
 
-## 🛠️ Troubleshooting
+### Code Quality & Security Standards
+- **Security-first Development** with SAST integration
+- **Type Safety** with comprehensive type hints
+- **Unit Testing** with security-focused test cases
+- **Integration Testing** for multi-tool workflows
+- **Performance Testing** under enterprise loads
+- **Security Testing** with automated vulnerability scanning
 
-### Common Issues
+## 🛠️ Professional Support & Troubleshooting
 
-**Application won't start:**
-- Check Python version (3.8+ required)
-- Verify all dependencies are installed
-- Check log files in `logs/` directory
+### Enterprise Support Channels
+- **Priority Email Support:** [outbackhutelectronics@gmail.com](mailto:outbackhutelectronics@gmail.com)
+- **Professional Website:** [outbackelectronics.com.au](https://outbackelectronics.com.au)
+- **GitHub Enterprise:** [Repository Issues](https://github.com/Outback-Electronics/Outback-CommandCore/issues)
+- **Documentation Portal:** Comprehensive guides and API documentation
 
-**UI appears corrupted:**
-- Try resetting configuration: `--reset-config`
-- Update graphics drivers
-- Try different theme in settings
+### Common Enterprise Issues
 
-**Performance issues:**
-- Enable performance mode in settings
-- Reduce animation duration
-- Increase monitoring intervals
+**Security Tool Integration:**
+- Verify all CommandCore applications are properly installed
+- Check administrator/root privileges for security tools
+- Review firewall and antivirus exclusions
+- Validate digital signatures and integrity
 
-**Applications not detected:**
-- Verify CommandCore applications are installed
-- Check file permissions
-- Review application paths in settings
+**Performance in Enterprise Environments:**
+- Enable high-performance mode for server deployments
+- Configure resource limits based on available hardware
+- Optimize monitoring intervals for large-scale deployments
+- Implement load balancing for multi-user environments
 
-### Log Files
-Logs are stored in:
-- **Windows:** `%APPDATA%/CommandCore/logs/`
-- **macOS:** `~/Library/Application Support/CommandCore/logs/`
-- **Linux:** `~/.config/commandcore/logs/`
+**Compliance and Auditing:**
+- Enable comprehensive audit logging
+- Configure log retention policies
+- Implement secure log forwarding to SIEM systems
+- Establish backup and recovery procedures
 
-### Debug Mode
-Enable debug mode for detailed logging:
+### Log Analysis for Security Operations
 ```bash
-python main.py --debug
+# View security events
+tail -f ~/.config/commandcore/logs/security.log
+
+# Analyze tool performance
+grep "PERFORMANCE" ~/.config/commandcore/logs/commandcore.log
+
+# Check audit trail
+jq '.audit_events[] | select(.severity == "HIGH")' audit.json
 ```
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Setup
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-### Code Guidelines
-- Follow PEP 8 style guide
-- Add type hints to new functions
-- Include docstrings for public APIs
-- Write tests for new features
-- Update documentation as needed
-
-## 📄 License
+## 📄 Licensing & Compliance
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+### Enterprise Licensing
+- **Commercial Use:** Permitted under MIT License
+- **Compliance:** Compatible with enterprise security requirements
+- **Distribution:** Allowed with proper attribution
+- **Modification:** Permitted for internal enterprise use
+
+## 🤝 Professional Community & Contributions
+
+### Contributing to CommandCore
+We welcome contributions from cybersecurity professionals and developers:
+
+1. **Security-focused Development** with threat modeling
+2. **Code Review Process** with security validation
+3. **Testing Requirements** including security test cases
+4. **Documentation Standards** for professional deployment
+5. **Compliance Considerations** for enterprise environments
+
+### Professional Standards
+- **OWASP Secure Coding Practices**
+- **NIST Cybersecurity Framework Alignment**
+- **ISO 27001 Security Controls**
+- **SOC 2 Type II Compliance Ready**
+
 ## 🙏 Acknowledgments
 
-- **Qt/PySide6** for the excellent GUI framework
-- **PSUtil** for system monitoring capabilities
-- **GitPython** for version control integration
-- **The Python Community** for amazing libraries and tools
+- **Cybersecurity Community** for best practices and standards
+- **Qt/PySide6** for enterprise-grade GUI framework
+- **Python Security Libraries** for robust security implementations
+- **Open Source Security Tools** for inspiration and integration
+- **Enterprise Partners** for feedback and testing
 
-## 📞 Support
+## 📞 Professional Contact
 
-- **Documentation:** [docs.commandcore.org](https://docs.commandcore.org)
-- **Issues:** [GitHub Issues](https://github.com/outback-electronics/commandcore-launcher/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/outback-electronics/commandcore-launcher/discussions)
-- **Email:** support@outbackelectronics.com
+<div align="center">
 
-## 🔄 Changelog
+**Outback Electronics - Professional Cybersecurity Solutions**
 
-### Version 2.0.0 (Latest)
-- Complete modernization with new architecture
-- Advanced system monitoring with real-time charts
-- Modern UI with theme customization
-- Comprehensive application management
-- Intelligent configuration system
-- Advanced logging and debugging
-- State management with persistence
-- Modern notification system
+🌐 **Website:** [outbackelectronics.com.au](https://outbackelectronics.com.au)
+📧 **Email:** [outbackhutelectronics@gmail.com](mailto:outbackhutelectronics@gmail.com)
+💻 **GitHub:** [Outback-Electronics](https://github.com/Outback-Electronics/Outback-CommandCore)
 
-### Version 1.0.0
-- Initial release
-- Basic application launching
-- Simple system monitoring
-- Configuration management
+*Empowering cybersecurity professionals with advanced, integrated toolsets*
+
+</div>
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by Outback Electronics**
+**⚠️ PROFESSIONAL USE NOTICE ⚠️**
 
-[Website](https://outbackelectronics.com) • [Documentation](https://docs.commandcore.org) • [Support](mailto:support@outbackelectronics.com)
+*CommandCore and its associated tools are designed for use by qualified cybersecurity professionals, penetration testers, and authorized security researchers. Users are responsible for ensuring compliance with all applicable laws and regulations in their jurisdiction. Always obtain proper authorization before conducting security assessments.*
 
 </div>
