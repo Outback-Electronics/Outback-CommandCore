@@ -180,6 +180,7 @@ Override settings using environment variables:
 ```bash
 export COMMANDCORE_THEME=dark
 export COMMANDCORE_LOG_LEVEL=DEBUG
+export COMMANDCORE_DEBUG=true
 
 ```
 
@@ -204,9 +205,6 @@ CommandCore/
 ├── splash_screen.py        # Splash screen implementation
 ├── system_status_tab.py    # System monitoring UI
 └── theme_manager.py        # Theme management
-```
-```
-export COMMANDCORE_DEBUG=true
 ```
 
 ### Advanced Configuration
