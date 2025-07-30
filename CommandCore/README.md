@@ -180,29 +180,6 @@ Override settings using environment variables:
 ```bash
 export COMMANDCORE_THEME=dark
 export COMMANDCORE_LOG_LEVEL=DEBUG
-
-## 📁 Directory Structure
-
-```
-CommandCore/
-├── CommandCore.png         # Application icon
-├── README.md               # This file
-├── __init__.py             # Package initialization
-├── app_state.py            # Application state management
-├── application_manager_tab.py  # Application management UI
-├── commandcore-launcher.desktop  # Linux desktop entry
-├── config.py               # Configuration management
-├── dashboard_tab.py        # Dashboard UI
-├── logging_setup.py        # Logging configuration
-├── main.py                 # Application entry point
-├── notification_manager.py # Notification system
-├── requirements.txt        # Python dependencies
-├── settings_tab.py         # Settings UI
-├── setup.py                # Installation script
-├── splash_screen.py        # Splash screen implementation
-├── system_status_tab.py    # System monitoring UI
-└── theme_manager.py        # Theme management
-```
 export COMMANDCORE_DEBUG=true
 ```
 
