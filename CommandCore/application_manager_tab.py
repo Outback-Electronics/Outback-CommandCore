@@ -971,6 +971,7 @@ class ApplicationManagerTab(QWidget):
     """
     
     # Signals
+    app_launch_requested = Signal(str)
     app_status_changed = Signal(str, str)
     
     def __init__(self, config, parent=None):

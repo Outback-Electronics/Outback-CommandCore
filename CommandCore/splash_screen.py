@@ -1,369 +1,256 @@
 """
-Modern Splash Screen for CommandCore Launcher - FIXED VERSION
+Modern Splash Screen for CommandCore Launcher - ENHANCED VERSION
 
-Features a beautiful, animated splash screen with working animations,
-loading progress, and modern visual effects without black squares.
+Features animated particles, waves, and proper timing controls.
+Ensures 6+ second display time with full 0-100% loading simulation.
 """
 
+import logging
 import math
 import random
 from typing import List, Tuple, Optional
-from dataclasses import dataclass
 from pathlib import Path
-import logging
 
+from PySide6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
+    QApplication, QGraphicsDropShadowEffect
+)
 from PySide6.QtCore import (
     Qt, QTimer, QPropertyAnimation, QEasingCurve, 
-    QParallelAnimationGroup, QSequentialAnimationGroup,
-    Property, QRectF, QPointF, QRect, QObject
+    QPointF, QRectF, Property, Signal
 )
 from PySide6.QtGui import (
-    QPainter, QColor, QLinearGradient, QRadialGradient,
-    QPainterPath, QFont, QFontMetrics, QPen, QBrush,
-    QPixmap, QIcon, QConicalGradient
-)
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QProgressBar,
-    QGraphicsEffect, QGraphicsDropShadowEffect, QGraphicsOpacityEffect,
-    QFrame, QApplication
+    QPainter, QPen, QBrush, QColor, QLinearGradient, 
+    QRadialGradient, QFont, QPainterPath
 )
 
 
-@dataclass
 class Particle:
-    """Represents a single animated particle in the background."""
-    x: float
-    y: float
-    vx: float
-    vy: float
-    size: float
-    color: QColor
-    rotation: float
-    rotation_speed: float
-    opacity: float
-    life: float
-    max_life: float
+    """Individual particle for the animated background."""
+    
+    def __init__(self, x: float, y: float, size: float, speed: float, color: QColor):
+        self.x = x
+        self.y = y
+        self.size = size
+        self.speed = speed
+        self.color = color
+        self.opacity = random.uniform(0.3, 0.8)
+        self.direction = random.uniform(0, 2 * math.pi)
+        self.pulse_phase = random.uniform(0, 2 * math.pi)
+        
+    def update(self, dt: float, width: int, height: int):
+        """Update particle position and properties."""
+        # Move particle
+        self.x += math.cos(self.direction) * self.speed * dt
+        self.y += math.sin(self.direction) * self.speed * dt
+        
+        # Wrap around screen edges
+        if self.x < -self.size:
+            self.x = width + self.size
+        elif self.x > width + self.size:
+            self.x = -self.size
+            
+        if self.y < -self.size:
+            self.y = height + self.size
+        elif self.y > height + self.size:
+            self.y = -self.size
+        
+        # Update pulse phase for breathing effect
+        self.pulse_phase += dt * 2
+        if self.pulse_phase > 2 * math.pi:
+            self.pulse_phase -= 2 * math.pi
 
 
-class ParticleSystem:
-    """Manages animated particles for the background effect with proper cleanup."""
-    
-    def __init__(self, particle_count: int = 60):
-        self.particles: List[Particle] = []
-        self.particle_count = particle_count
-        self.time = 0.0
-        self._active = True
-        
-        # CommandCore color palette
-        self.colors = [
-            QColor(0, 168, 255, 80),    # Primary blue
-            QColor(0, 210, 211, 60),    # Accent cyan
-            QColor(76, 175, 80, 40),    # Success green
-            QColor(156, 39, 176, 50),   # Purple accent
-        ]
-        
-        self._init_particles()
-    
-    def _init_particles(self):
-        """Initialize all particles with random properties."""
-        self.particles.clear()
-        
-        if not self._active:
-            return
-        
-        for _ in range(self.particle_count):
-            particle = Particle(
-                x=random.uniform(-0.1, 1.1),
-                y=random.uniform(-0.1, 1.1),
-                vx=random.uniform(-0.0005, 0.0005),
-                vy=random.uniform(-0.0005, 0.0005),
-                size=random.uniform(0.002, 0.008),
-                color=random.choice(self.colors),
-                rotation=random.uniform(0, 2 * math.pi),
-                rotation_speed=random.uniform(-0.02, 0.02),
-                opacity=random.uniform(0.3, 0.8),
-                life=random.uniform(0, 1),
-                max_life=random.uniform(2.0, 8.0)
-            )
-            self.particles.append(particle)
-    
-    def update(self, delta_time: float, width: int, height: int):
-        """Update all particles for one frame."""
-        if not self._active:
-            return
-            
-        self.time += delta_time
-        
-        for particle in self.particles:
-            # Update position
-            particle.x += particle.vx
-            particle.y += particle.vy
-            
-            # Update rotation
-            particle.rotation += particle.rotation_speed
-            
-            # Update life
-            particle.life += delta_time
-            if particle.life > particle.max_life:
-                self._respawn_particle(particle)
-            
-            # Bounce off edges
-            if particle.x < -0.05 or particle.x > 1.05:
-                particle.vx *= -0.8
-                particle.x = max(-0.05, min(1.05, particle.x))
-            
-            if particle.y < -0.05 or particle.y > 1.05:
-                particle.vy *= -0.8
-                particle.y = max(-0.05, min(1.05, particle.y))
-            
-            # Subtle pulsing effect
-            try:
-                pulse = math.sin(self.time * 2 + particle.rotation) * 0.1 + 0.9
-                particle.opacity = min(0.8, particle.opacity * pulse)
-            except (ValueError, OverflowError):
-                # Handle potential math errors
-                particle.opacity = 0.5
-    
-    def _respawn_particle(self, particle: Particle):
-        """Respawn a particle at a random edge."""
-        if not self._active:
-            return
-            
-        edge = random.randint(0, 3)
-        
-        if edge == 0:  # Top
-            particle.x = random.uniform(0, 1)
-            particle.y = -0.05
-            particle.vy = random.uniform(0.0002, 0.0008)
-        elif edge == 1:  # Right
-            particle.x = 1.05
-            particle.y = random.uniform(0, 1)
-            particle.vx = random.uniform(-0.0008, -0.0002)
-        elif edge == 2:  # Bottom
-            particle.x = random.uniform(0, 1)
-            particle.y = 1.05
-            particle.vy = random.uniform(-0.0008, -0.0002)
-        else:  # Left
-            particle.x = -0.05
-            particle.y = random.uniform(0, 1)
-            particle.vx = random.uniform(0.0002, 0.0008)
-        
-        particle.life = 0
-        particle.color = random.choice(self.colors)
-        particle.size = random.uniform(0.002, 0.008)
-    
-    def draw(self, painter: QPainter, width: int, height: int):
-        """Draw all particles."""
-        if not self._active or not painter:
-            return
-            
-        try:
-            painter.setRenderHint(QPainter.Antialiasing, True)
-            
-            for particle in self.particles:
-                # Calculate screen position
-                x = particle.x * width
-                y = particle.y * height
-                size = particle.size * min(width, height)
-                
-                # Set color with current opacity
-                color = QColor(particle.color)
-                color.setAlphaF(particle.opacity)
-                
-                # Draw particle
-                painter.setBrush(QBrush(color))
-                painter.setPen(Qt.NoPen)
-                
-                # Create a subtle glow effect
-                glow_size = size * 2
-                glow_color = QColor(color)
-                glow_color.setAlphaF(color.alphaF() * 0.3)
-                
-                painter.setBrush(QBrush(glow_color))
-                painter.drawEllipse(
-                    QRectF(x - glow_size/2, y - glow_size/2, glow_size, glow_size)
-                )
-                
-                # Draw main particle
-                painter.setBrush(QBrush(color))
-                painter.drawEllipse(
-                    QRectF(x - size/2, y - size/2, size, size)
-                )
-        except Exception as e:
-            # Log drawing errors but don't crash
-            logging.warning(f"Error drawing particles: {e}")
-    
-    def cleanup(self):
-        """Clean up particle system resources."""
-        self._active = False
-        self.particles.clear()
-
-
-class AnimatedBackground(QWidget):
-    """Widget that displays the animated background with particles and effects."""
+class ParticleSystem(QWidget):
+    """Animated particle system for the splash screen background."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
         
-        # Setup widget properties - NO BLACK BACKGROUND
         self.setAttribute(Qt.WA_TranslucentBackground, True)
-        self.setAttribute(Qt.WA_OpaquePaintEvent, False)
         self.setAttribute(Qt.WA_NoSystemBackground, True)
         
-        # Animation state
-        self.particle_system = ParticleSystem()
-        self.wave_phase = 0.0
-        self.time = 0.0
-        self._should_animate = True
+        self.particles: List[Particle] = []
+        self.wave_offset = 0.0
+        self._active = True
         
-        # Animation timer with proper cleanup
+        # Animation timer
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self._update_animation)
-        self.animation_timer.setSingleShot(False)
         self.animation_timer.start(16)  # ~60 FPS
-    
-    def stop_animation(self):
-        """Stop the background animation to save resources."""
-        self._should_animate = False
-        if self.animation_timer and self.animation_timer.isActive():
-            self.animation_timer.stop()
+        
+    def _create_particles(self, count: int = 50):
+        """Create initial particles."""
+        self.particles.clear()
+        
+        colors = [
+            QColor(0, 168, 255, 80),   # Primary blue
+            QColor(0, 210, 211, 60),   # Secondary cyan
+            QColor(255, 255, 255, 40), # White
+        ]
+        
+        for _ in range(count):
+            x = random.uniform(0, self.width())
+            y = random.uniform(0, self.height())
+            size = random.uniform(2, 8)
+            speed = random.uniform(10, 30)
+            color = random.choice(colors)
+            
+            self.particles.append(Particle(x, y, size, speed, color))
     
     def _update_animation(self):
-        """Update animation state and trigger repaint."""
-        if not self._should_animate:
+        """Update all animations."""
+        if not self._active:
             return
+            
+        dt = 0.016  # 16ms frame time
         
-        try:
-            delta_time = 0.016  # 16ms for 60fps
-            self.time += delta_time
-            self.wave_phase += 0.02
-            
-            if self.particle_system:
-                self.particle_system.update(delta_time, self.width(), self.height())
-            
-            self.update()
-        except Exception as e:
-            logging.warning(f"Error updating background animation: {e}")
+        # Update wave offset
+        self.wave_offset += dt * 50
+        if self.wave_offset > 360:
+            self.wave_offset -= 360
+        
+        # Update particles
+        for particle in self.particles:
+            particle.update(dt, self.width(), self.height())
+        
+        self.update()  # Trigger repaint
     
     def paintEvent(self, event):
         """Paint the animated background."""
-        if not self._should_animate:
+        if not self._active:
             return
             
         painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        
         try:
-            painter.setRenderHints(
-                QPainter.Antialiasing | 
-                QPainter.SmoothPixmapTransform | 
-                QPainter.TextAntialiasing
-            )
-            
-            # Create clipping path with rounded corners
-            path = QPainterPath()
-            path.addRoundedRect(self.rect(), 20, 20)
-            painter.setClipPath(path)
-            
-            # Draw gradient background
-            self._draw_background(painter)
-            
-            # Draw animated particles
-            if self.particle_system:
-                self.particle_system.draw(painter, self.width(), self.height())
-            
-            # Draw subtle wave patterns
-            self._draw_wave_patterns(painter)
-            
-        except Exception as e:
-            logging.warning(f"Error in background paint event: {e}")
-        finally:
-            painter.end()
-    
-    def _draw_background(self, painter: QPainter):
-        """Draw the gradient background."""
-        try:
-            # Main gradient
+            # Create gradient background
             gradient = QLinearGradient(0, 0, self.width(), self.height())
-            gradient.setColorAt(0.0, QColor(25, 32, 48))    # Dark blue-gray
-            gradient.setColorAt(0.3, QColor(30, 39, 58))    # Slightly lighter
-            gradient.setColorAt(0.7, QColor(35, 45, 68))    # Medium
-            gradient.setColorAt(1.0, QColor(40, 52, 78))    # Lighter at bottom
+            gradient.setColorAt(0.0, QColor(26, 31, 46, 240))
+            gradient.setColorAt(0.5, QColor(42, 47, 66, 220))
+            gradient.setColorAt(1.0, QColor(15, 20, 25, 240))
             
             painter.fillRect(self.rect(), QBrush(gradient))
             
-            # Subtle radial overlay for depth
-            center = QPointF(self.width() * 0.3, self.height() * 0.2)
-            radial = QRadialGradient(center, min(self.width(), self.height()) * 0.6)
-            radial.setColorAt(0.0, QColor(0, 168, 255, 15))  # Subtle blue glow
-            radial.setColorAt(0.5, QColor(0, 168, 255, 8))
-            radial.setColorAt(1.0, QColor(0, 0, 0, 0))
+            # Draw animated waves
+            self._draw_waves(painter)
             
-            painter.fillRect(self.rect(), QBrush(radial))
+            # Draw particles
+            self._draw_particles(painter)
+            
         except Exception as e:
-            logging.warning(f"Error drawing background: {e}")
+            logging.warning(f"Error painting particle system: {e}")
+        finally:
+            painter.end()
     
-    def _draw_wave_patterns(self, painter: QPainter):
-        """Draw subtle animated wave patterns."""
-        if not self._should_animate:
-            return
-        
+    def _draw_waves(self, painter: QPainter):
+        """Draw animated wave patterns."""
         try:
-            painter.setPen(Qt.NoPen)
+            painter.setBrush(Qt.NoBrush)
             
-            # Draw multiple wave layers
-            for i in range(3):
-                alpha = 8 - i * 2
-                wavelength = 200 + i * 100
-                amplitude = 30 + i * 10
-                phase_offset = i * math.pi / 3
-                
-                color = QColor(0, 168, 255, alpha)
-                painter.setBrush(QBrush(color))
-                
-                # Create wave path
+            # Multiple wave layers
+            wave_configs = [
+                {'amplitude': 30, 'frequency': 0.01, 'phase': 0, 'color': QColor(0, 168, 255, 30)},
+                {'amplitude': 20, 'frequency': 0.015, 'phase': 120, 'color': QColor(0, 210, 211, 25)},
+                {'amplitude': 25, 'frequency': 0.008, 'phase': 240, 'color': QColor(255, 255, 255, 15)},
+            ]
+            
+            for config in wave_configs:
                 path = QPainterPath()
-                points = []
                 
-                for x in range(0, self.width() + 20, 10):
-                    try:
-                        y = self.height() * 0.5 + amplitude * math.sin(
-                            (x / wavelength) * 2 * math.pi + self.wave_phase + phase_offset
-                        )
-                        points.append(QPointF(x, y))
-                    except (ValueError, OverflowError):
-                        # Handle potential math errors
-                        points.append(QPointF(x, self.height() * 0.5))
+                # Calculate wave points
+                points = []
+                for x in range(0, self.width() + 10, 5):
+                    phase = (config['phase'] + self.wave_offset) * math.pi / 180
+                    y = self.height() * 0.6 + config['amplitude'] * math.sin(
+                        config['frequency'] * x + phase
+                    )
+                    points.append(QPointF(x, y))
                 
                 if points:
+                    # Create wave path
                     path.moveTo(points[0])
                     for point in points[1:]:
                         path.lineTo(point)
                     
-                    # Close the path to create a filled shape
+                    # Close path to bottom for fill effect
                     path.lineTo(self.width(), self.height())
                     path.lineTo(0, self.height())
                     path.closeSubpath()
                     
+                    # Draw wave
+                    painter.setPen(QPen(config['color'], 2))
+                    painter.setBrush(QBrush(config['color']))
                     painter.drawPath(path)
+                    
         except Exception as e:
-            logging.warning(f"Error drawing wave patterns: {e}")
+            logging.warning(f"Error drawing waves: {e}")
+    
+    def _draw_particles(self, painter: QPainter):
+        """Draw animated particles."""
+        try:
+            for particle in self.particles:
+                # Calculate pulsing size
+                pulse = math.sin(particle.pulse_phase)
+                current_size = particle.size + pulse * 2
+                
+                # Calculate pulsing opacity
+                current_opacity = particle.opacity + pulse * 0.2
+                current_opacity = max(0.1, min(1.0, current_opacity))
+                
+                # Set color with current opacity
+                color = QColor(particle.color)
+                color.setAlphaF(current_opacity)
+                
+                # Draw particle with glow effect
+                painter.setBrush(QBrush(color))
+                painter.setPen(Qt.NoPen)
+                
+                # Main particle
+                painter.drawEllipse(
+                    QPointF(particle.x, particle.y),
+                    current_size, current_size
+                )
+                
+                # Glow effect
+                glow_color = QColor(color)
+                glow_color.setAlphaF(current_opacity * 0.3)
+                painter.setBrush(QBrush(glow_color))
+                painter.drawEllipse(
+                    QPointF(particle.x, particle.y),
+                    current_size * 2, current_size * 2
+                )
+                
+        except Exception as e:
+            logging.warning(f"Error drawing particles: {e}")
+    
+    def resizeEvent(self, event):
+        """Handle resize events."""
+        super().resizeEvent(event)
+        if self.width() > 0 and self.height() > 0:
+            self._create_particles()
+    
+    def stop_animation(self):
+        """Stop all animations."""
+        self._active = False
+        if self.animation_timer:
+            self.animation_timer.stop()
     
     def cleanup(self):
-        """Clean up background resources."""
+        """Clean up resources."""
         self.stop_animation()
-        if self.particle_system:
-            self.particle_system.cleanup()
-            self.particle_system = None
+        self.particles.clear()
 
 
 class LoadingIndicator(QWidget):
-    """Modern loading indicator with smooth animations - FIXED VERSION."""
+    """Modern loading indicator with smooth animations."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
         
         self.setFixedSize(80, 80)
         
-        # NO BLACK BACKGROUND
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         self.setAttribute(Qt.WA_OpaquePaintEvent, False)
         self.setAttribute(Qt.WA_NoSystemBackground, True)
@@ -374,12 +261,12 @@ class LoadingIndicator(QWidget):
         self._active = True
         self._pulse = 0.0
         
-        # Setup rotation animation with proper cleanup
+        # Setup rotation animation
         self.rotation_animation = QPropertyAnimation(self, b"rotation")
         self.rotation_animation.setDuration(2000)
         self.rotation_animation.setStartValue(0)
         self.rotation_animation.setEndValue(360)
-        self.rotation_animation.setLoopCount(-1)  # Infinite
+        self.rotation_animation.setLoopCount(-1)
         self.rotation_animation.setEasingCurve(QEasingCurve.Linear)
         
         # Setup pulse animation
@@ -423,69 +310,51 @@ class LoadingIndicator(QWidget):
     pulse = Property(float, get_pulse, set_pulse)
     
     def paintEvent(self, event):
-        """Paint the loading indicator with working animation."""
+        """Paint the loading indicator."""
         if not self._active:
             return
             
         painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        
         try:
-            painter.setRenderHint(QPainter.Antialiasing, True)
-            
-            # Fill with transparent background
-            painter.fillRect(self.rect(), QColor(0, 0, 0, 0))
-            
-            center = QPointF(self.width() / 2, self.height() / 2)
-            outer_radius = min(self.width(), self.height()) / 2 - 8
-            inner_radius = outer_radius - 12
-            
-            # Rotate the painter
+            center = self.rect().center()
             painter.translate(center)
             painter.rotate(self._rotation)
             
-            # Create animated gradient
-            gradient = QConicalGradient(0, 0, 0)
+            # Calculate dimensions
+            outer_radius = 35
+            inner_radius = 25
             
-            # Pulsing effect
-            pulse_intensity = (math.sin(self._pulse) * 0.3 + 0.7)
+            # Calculate pulse intensity
+            pulse_intensity = (math.sin(self._pulse) + 1) / 2  # 0 to 1
             
-            # Primary gradient colors with pulse
-            primary_color = QColor(0, 168, 255)
-            secondary_color = QColor(0, 210, 211)
+            # Draw outer ring segments
+            painter.setBrush(Qt.NoBrush)
             
-            primary_color.setAlphaF(pulse_intensity)
-            secondary_color.setAlphaF(pulse_intensity * 0.8)
+            # Static segments
+            segment_colors = [
+                QColor(0, 168, 255, 100),
+                QColor(0, 180, 255, 80),
+                QColor(0, 190, 255, 60),
+                QColor(0, 200, 255, 40),
+            ]
             
-            gradient.setColorAt(0.0, primary_color)
-            gradient.setColorAt(0.3, secondary_color)
-            gradient.setColorAt(0.7, QColor(156, 39, 176, int(180 * pulse_intensity)))
-            gradient.setColorAt(1.0, QColor(0, 0, 0, 0))
+            for i, color in enumerate(segment_colors):
+                painter.setPen(QPen(color, 3))
+                start_angle = i * 90 * 16  # Qt uses 16ths of degrees
+                span_angle = 60 * 16
+                painter.drawArc(
+                    QRectF(-outer_radius, -outer_radius, outer_radius * 2, outer_radius * 2),
+                    start_angle, span_angle
+                )
             
-            # Draw outer ring (spinning gradient)
-            painter.setBrush(QBrush(gradient))
-            painter.setPen(Qt.NoPen)
-            
-            # Create ring path
-            outer_path = QPainterPath()
-            outer_path.addEllipse(QRectF(-outer_radius, -outer_radius, outer_radius * 2, outer_radius * 2))
-            inner_path = QPainterPath()
-            inner_path.addEllipse(QRectF(-inner_radius, -inner_radius, inner_radius * 2, inner_radius * 2))
-            ring_path = outer_path - inner_path
-            
-            painter.drawPath(ring_path)
-            
-            # Draw progress arc if there's progress
+            # Draw progress arc
             if self._progress > 0:
-                painter.setBrush(Qt.NoBrush)
+                progress_color = QColor(0, 255, 128, int(150 * pulse_intensity))
+                painter.setPen(QPen(progress_color, 4))
                 
-                # Progress gradient
-                progress_gradient = QLinearGradient(-outer_radius, -outer_radius, outer_radius, outer_radius)
-                progress_gradient.setColorAt(0, QColor(76, 175, 80, 255))
-                progress_gradient.setColorAt(1, QColor(139, 195, 74, 200))
-                
-                pen = QPen(QBrush(progress_gradient), 6, Qt.SolidLine, Qt.RoundCap)
-                painter.setPen(pen)
-                
-                span_angle = int((self._progress / 100) * 360 * 16)  # Qt uses 16ths of degrees
+                span_angle = int((self._progress / 100) * 360 * 16)
                 painter.drawArc(
                     QRectF(-outer_radius + 3, -outer_radius + 3, (outer_radius - 3) * 2, (outer_radius - 3) * 2),
                     90 * 16,  # Start at top
@@ -523,15 +392,15 @@ class LoadingIndicator(QWidget):
 
 class ModernSplashScreen(QWidget):
     """
-    Modern splash screen with beautiful animations and loading indicators - FIXED VERSION.
+    Modern splash screen with animated background and proper timing controls.
     
     Features:
-    - Animated particle background
+    - Animated particle background with waves
     - Working loading spinner with rotation and pulse effects
-    - Smooth loading progress
-    - Modern typography and layout
-    - Responsive design
-    - NO BLACK SQUARES - all backgrounds are transparent
+    - Guaranteed 6+ second display time
+    - Proper 0-100% loading progress
+    - Background loading of main application
+    - Smooth fade-out animation
     """
     
     def __init__(self):
@@ -539,7 +408,7 @@ class ModernSplashScreen(QWidget):
         
         self.logger = logging.getLogger(self.__class__.__name__)
         
-        # Window setup - TRANSPARENT BACKGROUND
+        # Window setup
         self.setFixedSize(1000, 650)
         self.setWindowFlags(
             Qt.Window |
@@ -555,14 +424,22 @@ class ModernSplashScreen(QWidget):
         self._text_opacity = 0.0
         self._closing = False
         
+        # Timing controls - ENHANCED
+        self.start_time = None
+        self.min_display_time = 6000  # 6 seconds minimum
+        self.loading_complete = False
+        self.can_close = False
+        self.main_window_ref = None
+        
         # Components
-        self.background = None
+        self.particle_system = None
         self.loading_indicator = None
         
-        # Timers
+        # Timers and animations
         self.progress_timer = None
         self.text_fade_animation = None
         self.fade_out_animation = None
+        self.min_time_timer = None
         
         # Setup UI
         try:
@@ -570,57 +447,62 @@ class ModernSplashScreen(QWidget):
             self._center_on_screen()
             self._setup_animations()
             self._setup_progress_simulation()
+            
+            # Start minimum time timer
+            self.min_time_timer = QTimer()
+            self.min_time_timer.timeout.connect(self._check_can_close)
+            self.min_time_timer.setSingleShot(True)
+            self.min_time_timer.start(self.min_display_time)
+            
         except Exception as e:
             self.logger.error(f"Error initializing splash screen: {e}")
     
     def _setup_ui(self):
         """Setup the user interface components."""
         try:
-            # Background fills the entire widget
-            self.background = AnimatedBackground(self)
-            self.background.setGeometry(self.rect())
-            
-            # Loading indicator
-            self.loading_indicator = LoadingIndicator()
-            
-            # Main layout
             layout = QVBoxLayout(self)
-            layout.setContentsMargins(80, 100, 80, 80)
-            layout.setSpacing(40)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(0)
             
-            # Logo/Title area
+            # Animated background
+            self.particle_system = ParticleSystem(self)
+            self.particle_system.setGeometry(self.rect())
+            
+            # Content layout over background
+            content_widget = QWidget()
+            content_widget.setAttribute(Qt.WA_TranslucentBackground, True)
+            content_widget.setStyleSheet("background: transparent;")
+            
+            content_layout = QVBoxLayout(content_widget)
+            content_layout.setContentsMargins(60, 80, 60, 80)
+            content_layout.setSpacing(40)
+            
+            # Title section
             title_widget = QWidget()
             title_widget.setAttribute(Qt.WA_TranslucentBackground, True)
             title_widget.setStyleSheet("background: transparent;")
             
             title_layout = QVBoxLayout(title_widget)
             title_layout.setAlignment(Qt.AlignCenter)
-            title_layout.setSpacing(20)
+            title_layout.setSpacing(15)
             
             # Main title
-            self.title_label = QLabel("CommandCore")
+            self.title_label = QLabel("CommandCore Launcher")
             self.title_label.setAlignment(Qt.AlignCenter)
             self.title_label.setAttribute(Qt.WA_TranslucentBackground, True)
             self.title_label.setStyleSheet("""
                 QLabel {
-                    color: #00A8FF;
-                    font-size: 56px;
-                    font-weight: bold;
-                    font-family: 'Segoe UI', Arial, sans-serif;
+                    color: #FFFFFF;
+                    font-size: 42px;
+                    font-weight: 300;
+                    font-family: 'Segoe UI Light', 'Helvetica Neue', Arial, sans-serif;
                     letter-spacing: 2px;
                     background: transparent;
                 }
             """)
             
-            # Add drop shadow effect for title
-            title_shadow = QGraphicsDropShadowEffect()
-            title_shadow.setBlurRadius(30)
-            title_shadow.setColor(QColor(0, 168, 255, 100))
-            title_shadow.setOffset(0, 0)
-            self.title_label.setGraphicsEffect(title_shadow)
-            
             # Subtitle
-            self.subtitle_label = QLabel("Device Management Suite")
+            self.subtitle_label = QLabel("Modern Application Management Suite")
             self.subtitle_label.setAlignment(Qt.AlignCenter)
             self.subtitle_label.setAttribute(Qt.WA_TranslucentBackground, True)
             self.subtitle_label.setStyleSheet("""
@@ -652,11 +534,11 @@ class ModernSplashScreen(QWidget):
             title_layout.addWidget(self.subtitle_label)
             title_layout.addWidget(self.version_label)
             
-            layout.addStretch(1)
-            layout.addWidget(title_widget)
-            layout.addStretch(1)
+            content_layout.addStretch(1)
+            content_layout.addWidget(title_widget)
+            content_layout.addStretch(1)
             
-            # Loading area
+            # Loading section
             loading_widget = QWidget()
             loading_widget.setAttribute(Qt.WA_TranslucentBackground, True)
             loading_widget.setStyleSheet("background: transparent;")
@@ -665,7 +547,7 @@ class ModernSplashScreen(QWidget):
             loading_layout.setAlignment(Qt.AlignCenter)
             loading_layout.setSpacing(25)
             
-            # Loading indicator
+            # Loading indicator container
             indicator_container = QWidget()
             indicator_container.setFixedHeight(100)
             indicator_container.setAttribute(Qt.WA_TranslucentBackground, True)
@@ -673,6 +555,9 @@ class ModernSplashScreen(QWidget):
             
             indicator_layout = QVBoxLayout(indicator_container)
             indicator_layout.setAlignment(Qt.AlignCenter)
+            
+            # Create loading indicator
+            self.loading_indicator = LoadingIndicator()
             indicator_layout.addWidget(self.loading_indicator)
             
             # Loading text
@@ -707,15 +592,18 @@ class ModernSplashScreen(QWidget):
             loading_layout.addWidget(self.loading_label)
             loading_layout.addWidget(self.progress_label)
             
-            layout.addWidget(loading_widget)
-            layout.addStretch(1)
+            content_layout.addWidget(loading_widget)
+            content_layout.addStretch(1)
             
-            # Add drop shadow effect to the whole window
+            # Add content widget to main layout
+            layout.addWidget(content_widget)
+            
+            # Add drop shadow effect
             shadow = QGraphicsDropShadowEffect()
             shadow.setBlurRadius(40)
             shadow.setColor(QColor(0, 0, 0, 120))
             shadow.setOffset(0, 15)
-            self.setGraphicsEffect(shadow)
+            content_widget.setGraphicsEffect(shadow)
             
         except Exception as e:
             self.logger.error(f"Error setting up splash screen UI: {e}")
@@ -742,7 +630,7 @@ class ModernSplashScreen(QWidget):
             self.text_fade_animation.setEndValue(1.0)
             self.text_fade_animation.setEasingCurve(QEasingCurve.OutCubic)
             
-            # Start text animation immediately
+            # Start text animation after a brief delay
             QTimer.singleShot(300, self._start_text_animation)
         except Exception as e:
             self.logger.error(f"Error setting up animations: {e}")
@@ -756,28 +644,32 @@ class ModernSplashScreen(QWidget):
             self.logger.error(f"Error starting text animation: {e}")
     
     def _setup_progress_simulation(self):
-        """Setup automatic progress simulation."""
+        """Setup automatic progress simulation with proper timing."""
         try:
             self.progress_timer = QTimer()
             self.progress_timer.timeout.connect(self._update_progress)
             self.progress_timer.setSingleShot(False)
-            self.progress_timer.start(75)  # Update every 75ms for smoother progress
+            self.progress_timer.start(50)  # Update every 50ms for smooth progress
             
             # Progress stages with realistic timing
             self.progress_stages = [
                 (0, "Initializing components..."),
-                (10, "Loading configuration..."),
-                (25, "Setting up theme system..."),
-                (40, "Preparing user interface..."),
-                (55, "Loading applications..."),
-                (70, "Starting system monitoring..."),
-                (85, "Finalizing setup..."),
-                (95, "Almost ready..."),
+                (8, "Loading configuration..."),
+                (18, "Setting up theme system..."),
+                (28, "Preparing user interface..."),
+                (38, "Loading applications..."),
+                (48, "Starting system monitoring..."),
+                (58, "Initializing update checker..."),
+                (68, "Setting up system tray..."),
+                (78, "Loading notification system..."),
+                (88, "Finalizing setup..."),
+                (96, "Almost ready..."),
                 (100, "Ready!")
             ]
             self.current_stage = 0
-            self.progress_speed = 0.7
+            self.progress_speed = 0.3  # Slower for more realistic loading
             self.stage_delay = 0
+            
         except Exception as e:
             self.logger.error(f"Error setting up progress simulation: {e}")
     
@@ -785,14 +677,25 @@ class ModernSplashScreen(QWidget):
         """Update the loading progress simulation."""
         try:
             if self._closing or self.current_stage >= len(self.progress_stages):
+                if self._progress >= 100:
+                    self.loading_complete = True
+                    self._check_can_finish()
                 return
             
             target_progress, stage_text = self.progress_stages[self.current_stage]
             
-            # Add some delay between stages for realism
+            # Add realistic delay between stages
             if self._progress >= target_progress:
                 self.stage_delay += 1
-                if self.stage_delay >= 30:  # Wait about 2 seconds between major stages
+                # Vary delay times for different stages
+                if target_progress < 30:
+                    delay_needed = 20  # Slower at start
+                elif target_progress < 80:
+                    delay_needed = 15  # Medium speed
+                else:
+                    delay_needed = 25  # Slower at end for dramatic effect
+                    
+                if self.stage_delay >= delay_needed:
                     self.current_stage += 1
                     self.stage_delay = 0
                     if self.current_stage < len(self.progress_stages):
@@ -805,8 +708,8 @@ class ModernSplashScreen(QWidget):
             if self._progress >= target_progress:
                 self._progress = target_progress
                 self.loading_label.setText(stage_text)
-                # Slow down as we progress
-                self.progress_speed *= 0.95
+                # Slow down as we progress for realism
+                self.progress_speed *= 0.98
             
             # Update loading indicator and progress label
             if self.loading_indicator:
@@ -814,35 +717,45 @@ class ModernSplashScreen(QWidget):
             
             self.progress_label.setText(f"{int(self._progress)}%")
             
-            # Stop timer when complete
+            # Check if loading is complete
             if self._progress >= 100:
+                self.loading_complete = True
                 if self.progress_timer:
                     self.progress_timer.stop()
+                self._check_can_finish()
+                    
         except Exception as e:
             self.logger.error(f"Error updating progress: {e}")
     
-    def get_text_opacity(self):
-        return self._text_opacity
+    def _check_can_close(self):
+        """Called when minimum display time has passed."""
+        self.can_close = True
+        self.logger.info("Minimum display time reached")
+        self._check_can_finish()
     
-    def set_text_opacity(self, value):
-        if not self._closing:
-            self._text_opacity = value
-            # Apply opacity to text elements
-            for widget in [self.title_label, self.subtitle_label, self.version_label, self.loading_label, self.progress_label]:
-                if widget:
-                    effect = QGraphicsOpacityEffect()
-                    effect.setOpacity(value)
-                    widget.setGraphicsEffect(effect)
-    
-    text_opacity = Property(float, get_text_opacity, set_text_opacity)
+    def _check_can_finish(self):
+        """Check if we can finish the splash screen."""
+        if self.loading_complete and self.can_close and self.main_window_ref:
+            self.logger.info("All conditions met, finishing splash screen")
+            self._do_finish()
     
     def finish(self, main_window):
-        """Finish the splash screen with a smooth fade-out."""
+        """Called to finish the splash screen."""
+        if self._closing:
+            return
+            
+        self.main_window_ref = main_window
+        self.logger.info("Finish requested, checking conditions...")
+        self._check_can_finish()
+    
+    def _do_finish(self):
+        """Actually perform the finish sequence."""
         if self._closing:
             return
             
         try:
             self._closing = True
+            self.logger.info("Starting splash screen fade-out")
             
             # Stop all timers and animations
             self._stop_all_animations()
@@ -853,51 +766,76 @@ class ModernSplashScreen(QWidget):
             self.fade_out_animation.setStartValue(1.0)
             self.fade_out_animation.setEndValue(0.0)
             self.fade_out_animation.setEasingCurve(QEasingCurve.InCubic)
-            self.fade_out_animation.finished.connect(lambda: self._complete_finish(main_window))
+            self.fade_out_animation.finished.connect(self._complete_finish)
             self.fade_out_animation.start()
             
         except Exception as e:
             self.logger.error(f"Error finishing splash screen: {e}")
-            self._complete_finish(main_window)
+            self._complete_finish()
     
-    def _stop_all_animations(self):
-        """Stop all animations and timers."""
+    def _complete_finish(self):
+        """Complete the splash screen closure and show main window."""
         try:
-            # Stop background animations
-            if self.background:
-                self.background.stop_animation()
-            
-            # Stop timers
-            if self.progress_timer:
-                self.progress_timer.stop()
-                self.progress_timer = None
-            
-            # Stop animations
-            if self.text_fade_animation:
-                self.text_fade_animation.stop()
-                self.text_fade_animation = None
-                
-        except Exception as e:
-            self.logger.error(f"Error stopping animations: {e}")
-    
-    def _complete_finish(self, main_window):
-        """Complete the splash screen closure."""
-        try:
-            if main_window and not self._closing:
-                main_window.show()
-                main_window.raise_()
-                main_window.activateWindow()
+            if self.main_window_ref:
+                # Show the window maximized
+                self.main_window_ref.showMaximized()
+                self.main_window_ref.raise_()
+                self.main_window_ref.activateWindow()
+                self.logger.info("Main window shown maximized")
             
             self.close()
         except Exception as e:
             self.logger.error(f"Error completing splash finish: {e}")
     
+    def _stop_all_animations(self):
+        """Stop all animations and timers."""
+        try:
+            timers_to_stop = [
+                self.progress_timer,
+                self.min_time_timer
+            ]
+            
+            for timer in timers_to_stop:
+                if timer and timer.isActive():
+                    timer.stop()
+            
+            animations_to_stop = [
+                self.text_fade_animation
+            ]
+            
+            for animation in animations_to_stop:
+                if animation and animation.state() == QPropertyAnimation.Running:
+                    animation.stop()
+            
+            # Stop particle system
+            if self.particle_system:
+                self.particle_system.stop_animation()
+                
+        except Exception as e:
+            self.logger.error(f"Error stopping animations: {e}")
+    
+    def get_text_opacity(self):
+        return self._text_opacity
+    
+    def set_text_opacity(self, value):
+        if not self._closing:
+            self._text_opacity = value
+            # Apply opacity to text elements
+            from PySide6.QtWidgets import QGraphicsOpacityEffect
+            for widget in [self.title_label, self.subtitle_label, self.version_label, self.loading_label, self.progress_label]:
+                if widget:
+                    effect = QGraphicsOpacityEffect()
+                    effect.setOpacity(value)
+                    widget.setGraphicsEffect(effect)
+    
+    text_opacity = Property(float, get_text_opacity, set_text_opacity)
+    
     def resizeEvent(self, event):
-        """Handle resize events to update background size."""
+        """Handle resize events."""
         try:
             super().resizeEvent(event)
-            if self.background:
-                self.background.setGeometry(self.rect())
+            if self.particle_system:
+                self.particle_system.setGeometry(self.rect())
         except Exception as e:
             self.logger.error(f"Error handling resize event: {e}")
     
@@ -910,18 +848,13 @@ class ModernSplashScreen(QWidget):
             self._stop_all_animations()
             
             # Clean up components
-            if self.background:
-                self.background.cleanup()
-                self.background = None
+            if self.particle_system:
+                self.particle_system.cleanup()
+                self.particle_system = None
             
             if self.loading_indicator:
                 self.loading_indicator.cleanup()
                 self.loading_indicator = None
-            
-            # Stop fade out animation if active
-            if self.fade_out_animation:
-                self.fade_out_animation.stop()
-                self.fade_out_animation = None
             
             event.accept()
             

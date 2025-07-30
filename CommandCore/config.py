@@ -30,6 +30,8 @@ class UIConfig:
     window_width: int = 1200
     window_height: int = 800
     window_maximized: bool = False
+    window_x: Optional[int] = None
+    window_y: Optional[int] = None
     animation_enabled: bool = True
     animation_duration: int = 200
     show_splash: bool = True

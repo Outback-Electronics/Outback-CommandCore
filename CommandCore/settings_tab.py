@@ -756,15 +756,6 @@ class SettingsTab(QWidget):
             "Restore window position and size from last session"
         )
         
-        # Start maximized
-        self.start_maximized_check = QCheckBox("Start maximized")
-        self.start_maximized_check.setChecked(self.config.get("ui.start_maximized", False))
-        startup_group.add_setting_row(
-            "Start Maximized:",
-            self.start_maximized_check,
-            "Start the application in maximized window state"
-        )
-        
         # Default tab
         self.default_tab_combo = QComboBox()
         self.default_tab_combo.addItems(["Dashboard", "Applications", "System Status", "Settings"])
@@ -1172,7 +1163,7 @@ class SettingsTab(QWidget):
         # All checkboxes and combos
         checkboxes = [
             self.animations_enabled_check, self.show_splash_check,
-            self.remember_window_check, self.start_maximized_check,
+            self.remember_window_check,
             self.minimize_to_tray_check, self.close_to_tray_check, 
             self.notifications_enabled_check, self.auto_start_monitoring_check, 
             self.update_check_enabled_check, self.file_logging_check, 
@@ -1344,7 +1335,6 @@ class SettingsTab(QWidget):
             "ui.animation_duration": self.animation_speed_slider.value(),
             "ui.show_splash": self.show_splash_check.isChecked(),
             "ui.remember_window_state": self.remember_window_check.isChecked(),
-            "ui.start_maximized": self.start_maximized_check.isChecked(),
             "ui.minimize_to_tray": self.minimize_to_tray_check.isChecked(),
             "ui.close_to_tray": self.close_to_tray_check.isChecked(),
             

@@ -1117,6 +1117,18 @@ class SystemStatusTab(QWidget):
         except Exception as e:
             self.logger.error(f"Error loading system info: {e}")
     
+    def start_monitoring(self):
+        """Start system monitoring and metrics collection."""
+        try:
+            if not self.metrics_collector:
+                self.metrics_collector = MetricsCollector()
+                self.metrics_collector.metrics_updated.connect(self._update_metrics)
+                self.metrics_collector.error_occurred.connect(self._on_metrics_error)
+                self.metrics_collector.start()
+                self.logger.info("System monitoring started")
+        except Exception as e:
+            self.logger.error(f"Failed to start monitoring: {e}")
+    
     def _setup_connections(self):
         """Setup signal connections."""
         # Connections will be set up when metrics collector is created
